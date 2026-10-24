@@ -1,0 +1,62 @@
+Episode 9. The managerial round: STAR stories, leadership and consulting
+
+
+The managerial round tests judgement more than technology: ownership, stakeholders, leading people, handling clients. At a consultancy, picture the interviewer asking one question: "Can I put this person in front of a client on their own?"
+
+Quick recap of STAR. Situation in about fifteen seconds. Task in about ten. Action in about sixty: what you did, in the first person. Result in about fifteen, with a number, plus one line on what you learned.
+
+You need about ten stories, covering the themes panels ask about most. Here are seven story types with example shapes, using a fictional data platform lead. Replace every detail with your own real version and real numbers.
+
+Story one, for "your biggest achievement" or "end-to-end ownership". Situation: the company was decommissioning legacy systems across several clouds, but had to keep their data for regulatory retention. Task: as design and delivery lead, take a new archival platform from design through security certification to launch. Action: I designed the lakehouse and the metadata-driven history-load framework. I led security certification, using Unity Catalog grants, row filters and column masks. And I managed the change board, vendor and security engagements to keep delivery compliant. Then the hardest decision you made and why. Result: the scale in records and tables, the load performance gain, and that it was certified and launched.
+
+Story two, for "delivering under pressure", "ambiguity" or "customer focus". Situation: non-technical teams depended on engineers to retrieve archived data for regulatory requests. Task: give them governed self-service without weakening security. Action: I scoped a minimum version with the users raising the most requests. I architected a Databricks App with on-behalf-of authentication, so security applied per user. I released early and iterated. Result: weeks from idea to production, and the number of users.
+
+Story three, for "stakeholder management", "risk" or "a difficult stakeholder". Situation: privacy law requires personal data isn't kept longer than needed, and retention wasn't enforced consistently. Task: lead an automated purging programme that legal, security and business owners would trust. Action: I worked with legal to turn policy into retention rules per data object, designed the purge so data is physically removed with audit evidence, and got business owners to agree retention periods. Result: records purged, objects covered, and how widely it's now used.
+
+Story four, for "influence without authority". Situation: many teams wanted to build apps on the platform, but there was no standard and a real risk of insecure apps. Task: let them build safely without my team becoming a bottleneck. Action: I wrote the standard and built a deployment pipeline that bakes it in, so following the standard is the easy path. Then how you won buy-in. Result: how many builders release through it, and any external recognition like a conference talk.
+
+Story five, for "a technical trade-off under risk". Analysts needed to join on customer identifiers, but those identifiers were a privacy risk. I chose deterministic, keyed tokenisation, so joins still work, with keys in a secrets vault, built into ingestion so every load is protected by default. Result: the scale protected.
+
+Story six, for "leading and mentoring". I led a small team of engineers on a critical platform. I introduced code reviews and shared standards, mentored juniors, and tuned the slowest jobs. Result: delivery and performance improvements, as percentages.
+
+Story seven, for "business impact". A process change or automation you designed, and the revenue gained or cost saved, in dollars.
+
+Story eight: a disagreement, and story nine: a failure. These must be real, so prepare them yourself. For disagreement, use this shape: what you disagreed about and why it mattered, how you listened first, the data or options you brought, how it was resolved, whether you changed your mind, they did, or you disagreed and committed, and how the relationship is now. For failure: own it in the first sentence, explain how you recovered, and what you changed so it doesn't happen again. Never blame the team or another department.
+
+Quick mapping. Biggest achievement: story one. Conflict: your disagreement story, with story three as backup. Influence: story four. Tight deadline or ambiguity: story two. Leading people: story six. Business impact: story seven. Technical trade-off: story five. Have a backup for each, so you don't reuse the same story three times in one interview.
+
+Now leadership questions.
+
+"What's your leadership style?" "Hands-on but not controlling. I set the direction and the standards, and I stay close to design. I run the design reviews and I can still read and write the code. Then I give engineers clear ownership of workstreams and hold them to outcomes. With a team split across time zones, that also means writing things down, so nobody waits on a meeting to make progress."
+
+"How do you handle an underperformer?" Raise it early, privately, with specific examples. Find the cause: skill, motivation, or something outside work. Agree clear expectations and support with dates. Review regularly. Escalate only after genuine support.
+
+"A project is slipping. What do you do?" Spot it early from leading indicators, find the real cause, re-plan, cut scope before cutting quality, tell stakeholders early with options and a recommendation, then fix the cause.
+
+Consulting questions. "What do you do in your first two weeks with a client?" Interview stakeholders: the sponsor, data owners, the platform team, security and end users. Map the current state. Agree success measures and constraints in writing. Find one quick win to build trust. And finish with a written readout of findings, options and a recommended next step.
+
+"How do you estimate a Databricks engagement?" Break it into workstreams: platform, ingestion, governance, consumption and migration. Size by countable units like sources and pipelines, each with a complexity tier. Add discovery, testing, cutover and hypercare, then explicit contingency. Write down every assumption, because assumptions are what you negotiate later.
+
+"The client insists on a technical decision you think is wrong." Understand why first; there's often a constraint you can't see. Explain the risks in business terms, offer alternatives and recommend one. If they still choose their way and it isn't unsafe or non-compliant, document the decision and the risk, and commit to making it work. Escalate only for security, compliance or serious delivery risk.
+
+A few more you should have ready, briefly.
+
+"Tell me about giving difficult feedback." Be specific and timely, describe the behaviour and its impact rather than the person, listen to their side, agree what changes, and follow up. Use a real example with an engineer, a vendor or a peer.
+
+"How do you keep up with Databricks?" Release notes and the Databricks blog, the Data and AI Summit and World Tour events, trying new features hands-on, and learning from the teams that use what you've built. Name one recent feature you tried and what you thought of it.
+
+"Where do you see yourself in three years?" "Leading Databricks engagements end to end for several clients, owning the relationship as well as the architecture, and helping build the practice: mentoring architects and building reusable accelerators like ingestion frameworks and app standards."
+
+"Salary expectations and notice period?" Research the market range first. Ask for their band if you can. If pressed, give a range for the total package, not a single number, and say you're flexible for the right role. Know your notice period and earliest start date.
+
+"How do you handle scope creep?" Welcome the request, then run it through change control: show the impact on time, cost and risk, offer options, swap something out, extend, or defer, and get the sponsor's decision in writing.
+
+"How do you present an architecture to a CIO or CFO?" Lead with the business outcome and cost, then one simple diagram, then two or three options with a clear recommendation, then the risks and what you need from them. Keep the technical depth in the appendix.
+
+"How do you hand over to the client's team?" Pair their engineers with yours during the build, not just at the end. Provide runbooks, architecture decision records and training, agree a support model and a hypercare period, and define what handed over means up front.
+
+Now the gap questions, because a good panel will find them. No Databricks certification: "Not yet. My experience is production at real scale," then your scale, then "I'm sitting the Data Engineer Professional exam on" and give the date. In-house rather than consulting: "I've run security, change board and vendor engagements, scoped work for internal customers, and presented externally. Internal stakeholders are clients without invoices."
+
+And finally, questions to ask them. Pick two or three. "What does the first client engagement look like for this role, and is it already sold?" "How is the role split between pre-sales and delivery?" "Which Databricks capabilities are clients asking for most right now?" "How do you measure success in the first six months?"
+
+Next episode: the Senior Forward Deployed Engineer role specifically.

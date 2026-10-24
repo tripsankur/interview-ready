@@ -1,0 +1,114 @@
+Episode 11. The rapid-fire drill
+
+
+This is the practice episode. I'll ask a question, then leave a pause. Answer out loud during the pause, in under a minute, using a headline first. Then you'll hear a short model answer to compare. If you need more time, pause the player. Replay this episode the day before each interview.
+
+Question one. Tell me about yourself.
+(Pause: answer out loud.)
+Model answer: your pitch. Who you are, the platforms you run with their scale, three initiatives with numbers, then why this role. About ninety seconds, then stop.
+
+Question two. Why does an archival platform need a medallion architecture, and what's in your gold layer?
+(Pause: answer out loud.)
+Model answer: archival data is read-mostly, so the layers are purposeful, not ceremonial. Bronze is an exact copy for legal defensibility. Silver is typed and tokenised so one query pattern works across every table. Gold is thin on purpose: curated views for retrieval and regulatory requests.
+
+Question three. How do you make purged data actually unrecoverable in Delta?
+(Pause: answer out loud.)
+Model answer: DELETE only marks rows with deletion vectors. Rewrite the files with REORG with APPLY PURGE or OPTIMIZE, then VACUUM after the retention window, shorten deleted-file retention on purge tables, and handle copies: backups, clones, bronze raw files and extracts. Prove it with run logs, counts, table history and a verification query.
+
+Question four. When do you choose partitioning, Z-order or liquid clustering?
+(Pause: answer out loud.)
+Model answer: liquid clustering for almost every new table. Partitioning only for tables over a terabyte with a low-cardinality filter or delete column like date. Z-order is the older approach. And predictive optimization runs the maintenance for you on managed tables.
+
+Question five. Explain a shuffle from first principles.
+(Pause: answer out loud.)
+Model answer: wide operations need rows with the same key together, so Spark moves data between machines: serialise, write to disk, send over the network, read back. The cost is disk and network. So move less data, move it once, or avoid moving the big side with a broadcast join. And fix skew with adaptive query execution or salting.
+
+Question six. Your job got slower after adding nodes. Why?
+(Pause: answer out loud.)
+Model answer: more shuffle traffic and coordination, skew leaving one task doing most of the work, and small files or the driver as the bottleneck. Check the slowest stage and task skew before adding hardware.
+
+Question seven. On-behalf-of user authorization versus a service principal in a Databricks App.
+(Pause: answer out loud.)
+Model answer: with a service principal, everyone sees what the app sees, so security has to be rebuilt in the app. With on-behalf-of, the user's identity flows through, so Unity Catalog grants, row filters and masks apply per user. Governance stays in one place.
+
+Question eight. How do you get exactly-once from Kafka into Delta?
+(Pause: answer out loud.)
+Model answer: Structured Streaming with one checkpoint per stream ties each batch to its offsets, and Delta commits are idempotent. For upserts, foreachBatch with a MERGE on business keys. Available-now trigger if near-real-time is enough.
+
+Question nine. Your streaming state keeps growing. What's wrong?
+(Pause: answer out loud.)
+Model answer: a missing or too-generous watermark. Add or tighten it, use drop duplicates within watermark, RocksDB for large state, and watch the state metrics.
+
+Question ten. Where does Spark keep its Kafka offsets, and why does it matter?
+(Pause: answer out loud.)
+Model answer: in its own checkpoint, not in Kafka's consumer groups. So exactly-once comes from the checkpoint plus idempotent Delta commits, and you monitor lag from the streaming query progress, not Kafka's consumer-group tools.
+
+Question eleven. Your streaming job was down for a week and now fails with a data loss error. What do you do?
+(Pause: answer out loud.)
+Model answer: the needed offsets have aged out of Kafka retention. Don't just turn off fail-on-data-loss. Recover the gap from another source, restart from the earliest available offsets or a new checkpoint, reconcile counts, and prevent it with fast failure alerts and raw data landed in bronze.
+
+Question twelve. Consumer lag keeps growing. Diagnose it.
+(Pause: answer out loud.)
+Model answer: throughput is below the input rate. Check batch duration against the trigger, and look for a hot partition from key skew. Then add parallelism with min partitions or more Kafka partitions, right-size compute, remove expensive per-row work, and check for growing state or small files.
+
+Question thirteen. How do you handle change data capture events from Debezium?
+(Pause: answer out loud.)
+Model answer: land the raw change events in bronze with topic, partition and offset. Apply them to silver with AUTO CDC or a MERGE, using the log position as the sequencing column so out-of-order events resolve, and handle deletes and tombstones explicitly.
+
+Question fourteen. What's wrong with medallion dogma?
+(Pause: answer out loud.)
+Model answer: layers should be quality contracts, not three mandatory copies. Dogma triples storage and pipelines, and triples the places to purge personal data. Use views where possible, define each layer's contract, and design gold around data products, not dashboards.
+
+Question fifteen. What's the difference between VNet injection and Private Link?
+(Pause: answer out loud.)
+Model answer: injection decides where clusters live, in the customer's network. Private Link decides how traffic reaches services, over private IPs. A private deployment uses both, plus secure cluster connectivity. And DNS is where it usually breaks.
+
+Question sixteen. Clusters stopped starting after the client locked down egress.
+(Pause: answer out loud.)
+Model answer: check firewall rules for Databricks service tags, user-defined routes, network security groups, private endpoint DNS, and subnet IP exhaustion.
+
+Question seventeen. How would you design for multiple regions?
+(Pause: answer out loud.)
+Model answer: metastores are regional and identity is account-wide. Deploy catalogs, grants and policies as code to every region, keep regulated data in its home region, share with Delta Sharing, replicate for disaster recovery with deep clone, and test failover.
+
+Question eighteen. A client's Genie space is giving wrong answers over fifteen hundred tables. Fix it.
+(Pause: answer out loud.)
+Model answer: accuracy comes from curation. Curated gold tables or metric views, several focused spaces, rich descriptions, instructions and trusted SQL, a benchmark of real questions, and Unity Catalog permissions per user.
+
+Question nineteen. Plan a Hive metastore to Unity Catalog migration.
+(Pause: answer out loud.)
+Model answer: assess with UCX, design catalogs and storage credentials, migrate in waves with SYNC for external tables and deep clone for managed ones, replicate grants, refactor to three-level names, run in parallel, then cut over and retire Hive.
+
+Question twenty. How do you choose compute?
+(Pause: answer out loud.)
+Model answer: serverless by default, classic with a reason: custom libraries, init scripts, GPUs or strict networking. Never production on all-purpose compute. Then Photon, spot workers, auto-termination and cluster policies for cost.
+
+Question twenty-one. The monthly Databricks bill jumped forty percent. What do you do?
+(Pause: answer out loud.)
+Model answer: break it down from the billing system tables by workspace, compute type, job and tag. Fix the biggest items, like all-purpose compute for jobs, no auto-termination, or an always-on stream that only needed minutes. Then add guardrails: cluster policies, mandatory tags, budgets and alerts.
+
+Question twenty-two. An analyst can see customer phone numbers they shouldn't. Go.
+(Pause: answer out loud.)
+Model answer: treat it as a security incident. Restrict access now, check the audit logs in system tables, fix the control with a mask or a tag-based policy, follow the privacy incident process, and prevent it with tag-based policies, tokenisation and access reviews.
+
+Question twenty-three. The executive dashboard is wrong this morning.
+(Pause: answer out loud.)
+Model answer: stabilise by telling stakeholders and restoring the last good version if needed. Diagnose with lineage and table history. Fix and reprocess. Then prevent with quality checks on key metrics, reconciliation and freshness alerts.
+
+Question twenty-four. Tell me about a time you influenced without authority.
+(Pause: answer out loud.)
+Model answer: pick a standard or practice you got other teams to adopt. For example: there was no standard for building apps, and a real risk of insecure ones. I wrote the standard and built a pipeline that bakes it in, so the safe path is the easy path. Then the result: how many teams adopted it.
+
+Question twenty-five. Tell me about a failure.
+(Pause: answer out loud.)
+Model answer: use your real story. Own it in the first sentence, explain how you recovered, and what you changed so it doesn't happen again. No blaming.
+
+Question twenty-six. You're not certified. Why should we hire you?
+(Pause: answer out loud.)
+Model answer: lead with production evidence at real scale, things you built that others now use, any public talks or writing, and the exam booked for a specific date.
+
+Question twenty-seven. Do you have any questions for us?
+(Pause: answer out loud.)
+Model answer: always yes. What does the first engagement look like, and is it sold? How is the role split between pre-sales and delivery? What are customers asking for most right now? And how do you measure success in the first six months?
+
+That's the drill, and the end of the series. Before each interview: replay episode one for the method, rehearse the pitch from episode two out loud with a timer, and run this drill once more. Lead with a headline, prove it with your own work, name the trade-off, and let them choose where to go next. Good luck.

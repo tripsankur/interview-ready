@@ -1,0 +1,70 @@
+Episode 8. Scenario-based questions, and the resume grill
+
+
+Scenario questions sound like this: "It's Monday morning, the executive dashboard is wrong, what do you do?" They test judgement under pressure, more than knowledge. The structure that works every time is: stabilise, diagnose, fix, prevent, and communicate. Stabilise means stop the damage first. Diagnose means find the real cause, not the first symptom. Fix means the smallest safe change. Prevent means the change to the system so it doesn't recur. And communicate means telling the right people early, with facts and a time for the next update.
+
+There are ten scenarios in this episode, then the resume grill. For each one, pause, answer out loud, then compare.
+
+Scenario one: "The executive dashboard showed wrong numbers this morning, and the CFO noticed." Pause and answer.
+(Pause: answer out loud.)
+Model answer. Stabilise: tell the stakeholders straight away that the numbers are under investigation, and if needed restore the last good version with Delta time travel or RESTORE. Diagnose with lineage in Unity Catalog: walk back from the dashboard table to find where the numbers changed, and use table history to see which job wrote what and when. Common causes: a late or duplicated source load, a schema change, or a join that started fanning out. Fix and reprocess. Then prevent: expectations or data quality checks on the key metrics, reconciliation counts, and freshness alerts, so the next issue is caught before the CFO sees it.
+
+Scenario two: "A critical nightly pipeline failed at 3 a.m. and the business needs data by 9." Pause and answer.
+(Pause: answer out loud.)
+Model answer. Read the run error and the driver logs first. If it's transient, like a cloud blip, use repair run to rerun only the failed tasks. If it's data, like a bad file or an unexpected schema, quarantine the bad records and load the rest, so the business gets most of the data on time, and say clearly what's missing. Then prevent: retries with backoff on flaky tasks, schema evolution rules and a rescued data column in bronze, and an on-call runbook.
+
+Scenario three: "A source team changed their schema without telling anyone, and downstream jobs broke." Pause and answer.
+(Pause: answer out loud.)
+Model answer. Short term: bronze should absorb it, with schema evolution or a rescued data column, so ingestion doesn't stop. Fix silver to map the new columns. Long term: a data contract with the source team, covering schema, freshness and how changes are announced, plus contract tests in CI and an alert on schema drift. This is as much a relationship fix as a technical one.
+
+Scenario four: "The monthly Databricks bill jumped forty percent." Pause and answer.
+(Pause: answer out loud.)
+Model answer. Go to the billing system tables and break the increase down by workspace, compute type, job and tag. The usual culprits: a job running on all-purpose compute, clusters without auto-termination, an always-on streaming job that only needed minutes of freshness, a SQL warehouse sized too big, or a new team's heavy workload. Fix the biggest items first, then put guardrails in: cluster policies, mandatory tags, budgets with alerts, and a monthly cost review with owners.
+
+Scenario five: "A query that used to take two minutes now takes forty." Pause and answer.
+(Pause: answer out loud.)
+Model answer. Ask what changed: data volume, the query, the table layout, or the runtime version. Then look at the query profile: is it scanning far more files, spilling, or skewed? Common causes: small files from a new streaming writer, clustering or statistics out of date, a join that lost its broadcast because a table grew, or a skewed new key. Fix with OPTIMIZE or predictive optimization, liquid clustering on the filter columns, a broadcast hint or adaptive skew handling, and then add the query to a regression check.
+
+Scenario six: "An analyst says they can see customer phone numbers they shouldn't." Pause and answer.
+(Pause: answer out loud.)
+Model answer. Treat it as a security incident. Stabilise: revoke or restrict access immediately and capture the evidence. Diagnose with the audit logs in system tables: who accessed what, when, and how the grant or the missing mask happened. Fix the control: apply the mask or row filter, or better, a tag-based policy so new tables are protected automatically. Then follow the privacy incident process: notify security and the privacy officer, assess whether it's notifiable, and record what was done. And prevent: tag-based policies, tokenisation at ingestion, and periodic access reviews.
+
+Scenario seven: "A Unity Catalog migration is three months late and the client is frustrated." Pause and answer.
+(Pause: answer out loud.)
+Model answer. First understand why: usually hidden complexity like DBFS-root data, mount points, init scripts, or teams that didn't refactor their code. Re-plan honestly with the sponsor: what's done, what's left, the real risks, and options. Then change the approach: migrate in smaller waves by domain, use UCX to automate the inventory and table upgrades, put a migration squad alongside each team, and show visible progress every week. Rebuild trust with delivered waves, not promises.
+
+Scenario eight: "Two business units want conflicting definitions of 'active customer'." Pause and answer.
+(Pause: answer out loud.)
+Model answer. Don't pick a winner yourself. Bring both owners together with the data, show where the definitions differ and what each is used for. Often both are valid for different purposes, so name them differently, like "active billing customer" and "active network customer", and define each once, as a governed metric in a metric view, with an owner. Escalate to a data governance forum only if they can't agree.
+
+Scenario nine: "The client's security team blocks your Databricks deployment until it's fully private." Pause and answer.
+(Pause: answer out loud.)
+Model answer. Treat security as a requirement, not an obstacle. Agree their exact requirements, then propose the standard pattern: VNet injection, secure cluster connectivity with a NAT gateway or their firewall, front-end and back-end Private Link, private endpoints for storage and Key Vault with public access disabled, network connectivity configurations for serverless, and private DNS zones. Bring a diagram and a test plan, and involve their network team early, because DNS is where it usually breaks.
+
+Scenario ten: "Your project's budget gets cut by a third halfway through." Pause and answer.
+(Pause: answer out loud.)
+Model answer. Go back to the outcomes the sponsor cares most about, and re-plan to deliver those first. Cut scope, not quality: drop or defer lower-value features, simplify the design, for example serverless instead of custom clusters, and reuse frameworks. Show the sponsor the trade-off in writing: what they get, what they lose, and the risks. Then deliver the reduced scope well.
+
+Now the resume grill. These are the questions an interviewer asks after reading your CV, to test that the claims are real. Short answers.
+
+"How did you move data out of AWS and GCP, and what did egress cost?" Name the transfer method, how you batched the transfers to control egress, and how you verified completeness before each source was switched off. Use your real numbers.
+
+"What does commercial launch mean for an internal platform?" The platform became the system of record for retrieval, and the legacy systems could be decommissioned. Use your real example, ideally with savings or the number of systems retired.
+
+"How did you reconcile billions of migrated records?" Reconciliation was built into the framework: every load wrote source and target row counts and checksums on key columns, mismatches failed the load and alerted, and the biggest tables also had sampled row-level hash comparisons.
+
+"How did the search app handle unstructured data?" Explain how files in Unity Catalog volumes were indexed and searched, and how document access was governed per user.
+
+"When would you not use Databricks Apps?" Public-facing or very high-concurrency apps, sub-second latency at scale, or complex front ends better served by a dedicated web platform. Apps suit internal, governed, data-centric tools.
+
+"Ninety-five percent on-time delivery: how is that measured, and which one did you miss?" Give the measure, then one real miss and what you changed afterwards.
+
+"How do you lead a team split across two time zones?" Overlap hours for design decisions, written design documents so the offshore team isn't blocked waiting for onshore, clear ownership per workstream, rotating demo leads, and code reviews across both sites.
+
+"You've only used Azure deeply. How would this change on AWS?" Same lakehouse and Unity Catalog design. Swap ADLS for S3, managed identities for IAM roles, VNet injection for a customer-managed VPC, and Private Link for AWS PrivateLink. If you've moved data from other clouds, mention it.
+
+"How would you stand up a new client's platform?" Terraform with the Databricks provider for the account, metastore, workspaces, catalogs, grants and cluster policies. Bundles for jobs, pipelines and apps. CI/CD to promote between environments.
+
+"Why didn't you use declarative pipelines?" The framework predates them and needed custom control-table logic. For new builds, I'd use them for standard medallion pipelines with expectations and AUTO CDC.
+
+That's the scenarios and the grill. Next episode: the managerial round and your STAR stories.

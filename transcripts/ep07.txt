@@ -1,0 +1,54 @@
+Episode 7. Design questions and first-principles thinking
+
+
+Design rounds feel open-ended, but they're scored on structure. This episode gives you a repeatable way to run any design question, then walks through the four scenarios most likely to come up, and finishes with curveball questions answered from first principles.
+
+The opening move, every time. Before drawing anything, ask about four things. Who uses this, and what decision does it drive? Volumes, latency and growth. Constraints: regulation, sovereignty, existing tools, skills, and budget. And success: what does done look like in three months and in twelve? You don't need long answers. If the interviewer says "you decide," state your assumptions out loud and move on.
+
+Then draw left to right: sources, ingestion, storage layers, governance, consumers. Then cross-cutting concerns: security, monitoring, CI/CD, cost. Then risks and how you'd phase the delivery. Keep talking while you draw. Silence while drawing loses the room.
+
+Scenario one: migrate a client from Hive metastore to Unity Catalog across three workspaces. This is core consulting work for Databricks partners. Answer in phases.
+
+Assess: run the UCX tool to inventory tables, jobs, grants and code that uses two-level names or DBFS paths. Classify tables as managed Hive tables, external tables, or data in the DBFS root.
+
+Design: a metastore per region, catalogs per environment and domain, storage credentials and external locations, and the group model from Entra ID.
+
+Migrate in waves by domain, lowest risk first. Upgrade external tables in place with SYNC. Copy managed tables with CREATE TABLE AS SELECT or deep clone. Replicate the grants. Refactor code to three-level names. Run in parallel and reconcile.
+
+Cut over: repoint CI/CD and jobs, freeze Hive writes, and retire the Hive metastore.
+
+Then name the risks: DBFS-root data, init scripts, mount points, credential passthrough, and third-party tools still pointing at Hive.
+
+Scenario two: a client has fifteen hundred tables and their text-to-SQL is unreliable. Design a Genie space people trust. Partners publish case studies exactly like this, so nail it. Headline: "Accuracy comes from curation, not from a bigger model." Don't point Genie at fifteen hundred tables. Build curated gold tables or metric views per domain, and create several focused spaces, like finance, network and sales. Add rich table and column descriptions, instructions, trusted example SQL, and business metrics defined once. Build a benchmark of fifty to a hundred real questions with expected answers, and measure accuracy before launch and after every change. Govern with Unity Catalog, so permissions, filters and masks apply per user. Then surface it where people work: Teams, Slack, or an app.
+
+Scenario three: design a customer-service agent that uses policy documents and account data. The agent is served on Model Serving and plans and calls tools. Policy documents sit in Unity Catalog volumes, are chunked and embedded into a Vector Search index. Account lookups are Unity Catalog functions used as tools, governed per user. A served foundation model with a fallback. Guardrails: PII masking, topic restrictions, and human handoff. Quality: MLflow tracing, an evaluation set, LLM judges for correctness and groundedness, and production monitoring. And roll it out to internal staff first, before customers. Agent Bricks can automate much of this for common patterns.
+
+Scenario four: migrate a client from Hadoop, Synapse or Snowflake to Databricks. Phases: assess the workloads and baseline the cost, pilot one end-to-end use case, convert code with tooling plus manual work, run in parallel with reconciliation, cut over by domain, and decommission. If you've run a migration like this, tell it as proof.
+
+Two quick trade-off questions. "A client wants to go from batch to real-time. What are the trade-offs?" Cost, because it's always-on compute. Complexity: late data, state, exactly-once, and support. And real need: near-real-time in minutes often meets the business case at a fraction of the cost, so ask what decision changes with fresher data. And: "The client is focused on price per DBU." Move the conversation to total cost of ownership: engineering hours saved, tools consolidated, licences retired, and time to insight, backed by a proof of value with a measured baseline.
+
+Now curveballs. Use the five steps from episode one: restate and clarify, find the binding constraint, reason about what physically happens, propose the simplest design, and name the trade-off. Let's practise. For each one, pause and think, then hear a model answer.
+
+Curveball one: "If Delta Lake didn't exist, how would you get ACID transactions on object storage?" Pause and think.
+(Pause: answer out loud.)
+
+Model answer. You need an ordered log of commits, with an atomic "create only if it doesn't exist" write, so two writers can't both claim the same version number. Readers rebuild the table state from the log, which gives snapshot isolation. Writers retry when there's a conflict, which is optimistic concurrency. And that's essentially Delta's design.
+
+Curveball two: "Delete one customer from hundreds of billions of records within an hour." Pause and think.
+(Pause: answer out loud.)
+
+Model answer. Make finding them cheap: cluster on the tokenised customer key, so file statistics skip almost everything and you only touch a few files. Then delete with deletion vectors and purge. Or, more radically, crypto-shredding: encrypt each customer's data with their own key and delete the key, so the data becomes unreadable without rewriting anything.
+
+Curveball three: "The job got slower when you added more nodes. Why?" Pause and think.
+(Pause: answer out loud.)
+
+Model answer. More nodes means more shuffle traffic and coordination. Skew means one task still does most of the work regardless of node count. And small files and driver bottlenecks don't scale with workers. So check the slowest stage and task-time skew before adding hardware.
+
+Curveball four: "Count distinct users across a hundred billion rows with very little memory." Pause and think.
+(Pause: answer out loud.)
+
+Model answer. If approximate is acceptable, HyperLogLog, which is approx count distinct, uses kilobytes of memory with a small known error. If it must be exact, partition by a hash of the user ID so each partition's distinct set fits in memory, count each partition, then add the counts.
+
+Finally, MLOps and multi-cloud as design topics. For MLOps on Databricks: feature tables in Unity Catalog, MLflow experiments, the Unity Catalog model registry with champion and challenger aliases, Model Serving, inference tables and Lakehouse Monitoring for drift, and bundles to promote code. The principle: deploy code, not models, so each environment retrains reproducibly. For multi-cloud: one metastore per cloud region, Delta Sharing rather than copying, Terraform and bundles for consistency, and watch egress cost.
+
+Next episode: scenario-based questions, and the resume grill.

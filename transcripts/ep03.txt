@@ -1,0 +1,51 @@
+Episode 3. Spark and Delta Lake internals
+
+
+This episode covers the questions that test depth: what Spark does when you run a query, the shuffle from first principles, tuning, Delta Lake's transaction log, and data layout: partitioning, Z-order, liquid clustering, predictive optimization, small files, and coalesce versus repartition. The Forward Deployed Engineer profile asks specifically for knowledge of Spark runtime internals, so expect real depth here.
+
+Start with the query lifecycle. If they ask, "What happens when I run a query?", answer in four steps.
+
+Step one, the Catalyst optimizer. Spark parses your code into an unresolved logical plan, resolves it against the catalog, then applies rule-based optimisations like predicate pushdown, column pruning and constant folding. Then it chooses a physical plan, including the join strategy.
+
+Step two, execution. Whole-stage code generation fuses operators into compiled code over binary rows. On Databricks, Photon replaces much of this with a vectorised C++ engine.
+
+Step three, scheduling. An action creates a job. The scheduler splits the job into stages at every shuffle boundary, and each stage runs one task per partition on the executor cores.
+
+Step four, adaptive query execution. Between stages, Spark looks at real statistics and re-plans: it can coalesce small shuffle partitions, switch a sort-merge join to a broadcast join, and split skewed partitions.
+
+Now the shuffle, from first principles. This is a favourite question. Here's the spoken answer.
+
+"Spark splits data across machines. A wide operation, like a group-by, a join, a distinct or a window, needs every row with the same key in the same place. So Spark has to move data between machines. That's a shuffle: serialise the rows, write shuffle files to local disk, send them over the network, read them back and merge, sometimes spilling to disk. It's expensive because of disk and network, not maths. So I ask three questions. Can I move less data? Can I move it only once? Or can I avoid moving the big side at all?"
+
+Then the techniques. Move less: filter and select columns before wide operations, and aggregate before joining when you can. Avoid moving the big side: broadcast the small table. The default broadcast threshold is ten megabytes, and adaptive query execution can convert larger joins at runtime. Move it once: join and aggregate on the same key so Spark reuses the partitioning, and avoid unnecessary repartition calls. Balance it: skew sends one hot key to one task, so use adaptive query execution's skew join handling, or salt the key. Right-size it: spark dot sql dot shuffle dot partitions defaults to two hundred, and adaptive query execution coalesces small partitions automatically. And find it: look for Exchange nodes in the explain plan, and shuffle read and write sizes in the Spark UI.
+
+Next, diagnosing a slow job. Headline: "I start in the Spark UI with the slowest stage." Then check four things: task-time skew, spill to disk, shuffle size, and the number of files read. Typical fixes: fix skew, broadcast small tables, compact small files, prune with clustering, right-size the cluster, and enable Photon where it shortens runtime. Photon gives big gains on SQL, joins, aggregations and Delta writes, but little on code dominated by Python UDFs. And avoid Python UDFs where you can, because they move data between the JVM and Python. If you must, use pandas UDFs, which are vectorised.
+
+Memory questions come next. Executor memory is unified, shared between execution, which covers shuffles, joins and sorts, and storage, which covers caching. There's also overhead memory for off-heap and Python processes. When execution memory runs out, Spark spills to disk. A driver out-of-memory error is usually caused by collect, toPandas, a huge broadcast, or planning over too many small files. An executor out-of-memory error is usually skew, partitions that are too large, an exploding join, or Python UDF memory.
+
+Now Delta Lake. "How does Delta give ACID on object storage?" Headline: "With a transaction log." The underscore delta log folder holds JSON commit files plus periodic Parquet checkpoints. Each commit is a new table version. Writers use optimistic concurrency: they read a version, write their data files, then try to commit the next version number. If someone else committed first and the changes conflict, they retry or fail. Readers rebuild the table state from the log, which gives snapshot isolation.
+
+Deletion vectors. These matter for you because of the privacy work. A deletion vector is a small bitmap that marks rows as deleted or updated, instead of rewriting whole files. That makes DELETE, UPDATE and MERGE much faster. But the rows are still physically in the file. To make them really gone, you rewrite the files with REORG TABLE with APPLY PURGE, or with OPTIMIZE, and then VACUUM removes the old files once they pass the retention window. Default VACUUM retention is seven days. Log retention is separate, thirty days by default. And time travel only works back as far as the files that still exist.
+
+That leads to a favourite question in regulated industries: "Delta DELETE doesn't physically remove data. How did you make purged records unrecoverable?" Cover every place the data survives. Deletion vectors, so purge or rewrite the files. Old files, so VACUUM after the retention window. Retention settings, so shorten the deleted-file retention duration on purge-subject tables to an agreed value. And copies: backups, snapshots, clones, bronze raw files and downstream extracts. Then proof for auditors: purge requests and run logs, before and after counts, DESCRIBE HISTORY showing the delete and vacuum operations, and a verification query.
+
+Now data layout. Here's the headline that ties it together: "Partitioning, Z-order and liquid clustering are all ways to lay out data so queries read fewer files. Predictive optimization is about who runs the maintenance. And coalesce is about how many partitions, and so files, a Spark job writes."
+
+Partitioning creates physical folders per column value. Use it only for tables over about a terabyte, with a low-cardinality column used in almost every filter or delete, like date. Each partition should hold at least about a gigabyte. Never partition on a high-cardinality column like customer ID. And partitioning is fixed at write time.
+
+Z-order co-locates related values within files, so file statistics skip more data. It's the older approach, usually combined with partitioning, and it isn't incremental.
+
+Liquid clustering is the default for new tables. You set cluster-by keys, and clustering happens incrementally when OPTIMIZE runs. It handles high cardinality, skew, and changing query patterns, and you can change the keys without rewriting everything. Cluster-by auto lets Databricks choose the keys. It can't be combined with partitioning or Z-order.
+
+Predictive optimization means Databricks runs OPTIMIZE, VACUUM and statistics collection for you, on Unity Catalog managed tables. It replaces hand-scheduled maintenance jobs.
+
+Small files versus over-partitioning: "They're the same disease from two directions." Small files mean Spark spends its time opening files and tracking metadata instead of reading data. Causes: streaming micro-batches, highly parallel writes, frequent small appends, and over-partitioning. Fixes: optimized writes and auto compaction, OPTIMIZE or predictive optimization, longer trigger intervals, and repartitioning before the write. The classic follow-up: "A table is partitioned by customer ID and queries are slow. What do you do?" Rebuild it with liquid clustering on customer ID, then run OPTIMIZE.
+
+Finally, coalesce versus repartition. Coalesce reduces the number of partitions by merging existing ones, without a full shuffle. It's cheap, but partitions can end up uneven, and it can reduce the parallelism of the work before it. Coalesce one pushes everything through one task. Repartition does a full shuffle and produces evenly sized partitions, and can increase or decrease the count. Repartition by a column hash-partitions on that column, which is useful before writing a partitioned table so each partition gets a few large files. On Delta, optimized writes and adaptive query execution handle most of this, so reach for these only when you can see a file-count or skew problem.
+
+Practice question. Pause and answer out loud: "Why is reading a billion rows fast, but updating a million rows slow?"
+(Pause: answer out loud.)
+
+Here's a model answer. Files are columnar and immutable. Reads can skip columns and skip files using statistics. But an update has to rewrite every file it touches. Deletion vectors and good clustering reduce how many files get rewritten.
+
+That's Spark and Delta. In the next episode: pipelines, compute, platform basics and CI/CD.

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Interview Ready</title>
+<link rel="alternate" type="application/rss+xml" title="Interview Ready" href="feed.xml">
+<style>
+:root{--bg:#F4F7F8;--ink:#14212B;--mu:#55646E;--ac:#0D6B70;--card:#fff;--rule:#D5DEE3}
+@media (prefers-color-scheme:dark){:root{--bg:#0E151A;--ink:#E3EBEF;--mu:#98A7B0;--ac:#56B9BB;--card:#152129;--rule:#27353E}}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:720px;margin:0 auto;padding:40px 16px 80px}
+header{display:flex;gap:20px;align-items:center;margin-bottom:28px}
+header img{width:120px;height:120px;border-radius:12px}
+h1{margin:0;font-size:34px} .lede{color:var(--mu);margin:6px 0 0}
+.sub{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;margin:0 0 24px}
+code{word-break:break-all} ol{list-style:none;padding:0}
+li{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:16px;margin:12px 0}
+h2{font-size:18px;margin:0 0 6px} audio{width:100%} .meta{color:var(--mu);font-size:14px;margin:6px 0 0}
+a{color:var(--ac)}
+</style></head><body><main>
+<header><img src="cover.png" alt="Interview Ready cover"><div><h1>Interview Ready</h1>
+<p class="lede">Eleven episodes, about 108 minutes. A revision series for Databricks architect and Forward Deployed Engineer interviews.</p></div></header>
+<div class="sub"><b>Subscribe in Pocket Casts:</b> open Search, paste this feed address, then tap Subscribe.<br><code>https://tripsankur.github.io/interview-ready/feed.xml</code></div>
+<ol>
+      <li><h2>1. The game plan: how to answer, how to navigate, and how to use STAR</h2>
+        <p>Welcome to Interview Ready, a revision series for senior Databricks interviews: data architect roles at Databricks consulting partners, and Databricks&#x27; own Senior Forward Deployed Engineer role. Eleven episodes. This first one is about how to answer, not what to answer. The next nine cover the content, and the last one is a rapid-fire drill where you answer out loud.</p>
+        <audio controls preload="none" src="episodes/ep01.mp3"></audio>
+        <p class="meta">8 min · <a href="transcripts/ep01.txt">Transcript</a></p></li>
+      <li><h2>2. Your story: the pitch and your experience</h2>
+        <p>In this episode we build the opening of every interview: &quot;Tell me about yourself.&quot; Then we cover how to elaborate when they ask about your lakehouse design work, your hands-on development, and your career. The examples here use a fictional data platform lead, so swap in your own projects and numbers.</p>
+        <audio controls preload="none" src="episodes/ep02.mp3"></audio>
+        <p class="meta">8 min · <a href="transcripts/ep02.txt">Transcript</a></p></li>
+      <li><h2>3. Spark and Delta Lake internals</h2>
+        <p>This episode covers the questions that test depth: what Spark does when you run a query, the shuffle from first principles, tuning, Delta Lake&#x27;s transaction log, and data layout: partitioning, Z-order, liquid clustering, predictive optimization, small files, and coalesce versus repartition. The Forward Deployed Engineer profile asks specifically for knowledge of Spark runtime internals, so expect real depth here.</p>
+        <audio controls preload="none" src="episodes/ep03.mp3"></audio>
+        <p class="meta">10 min · <a href="transcripts/ep03.txt">Transcript</a></p></li>
+      <li><h2>4. Pipelines, compute, platform basics and delivery</h2>
+        <p>This episode covers ingestion strategy, metadata-driven frameworks, Spark Declarative Pipelines, the trouble with medallion dogma, compute selection, a set of platform basics that often come up as quick questions, and CI/CD. Kafka and streaming get their own episode next.</p>
+        <audio controls preload="none" src="episodes/ep04.mp3"></audio>
+        <p class="meta">10 min · <a href="transcripts/ep04.txt">Transcript</a></p></li>
+      <li><h2>5. Kafka and streaming, in depth</h2>
+        <p>Streaming is where interviewers find out whether you&#x27;ve run things in production. This episode gives you the vocabulary and the failure stories to show you&#x27;ve run Kafka pipelines for real. We cover Kafka fundamentals, reading Kafka with Structured Streaming, exactly-once, triggers and latency, watermarks and late data, joins, state, change data capture, operations and monitoring, and four streaming scenarios.</p>
+        <audio controls preload="none" src="episodes/ep05.mp3"></audio>
+        <p class="meta">12 min · <a href="transcripts/ep05.txt">Transcript</a></p></li>
+      <li><h2>6. Governance, security and networking</h2>
+        <p>This is home ground for you. Your privacy and governance work is your strongest differentiator, so this episode is about saying it crisply. We cover Unity Catalog, row filters and attribute-based access, Databricks Apps authentication, tokenisation, enterprise governance strategy, multi-region design, and Azure networking: VNet injection and Private Link.</p>
+        <audio controls preload="none" src="episodes/ep06.mp3"></audio>
+        <p class="meta">9 min · <a href="transcripts/ep06.txt">Transcript</a></p></li>
+      <li><h2>7. Design questions and first-principles thinking</h2>
+        <p>Design rounds feel open-ended, but they&#x27;re scored on structure. This episode gives you a repeatable way to run any design question, then walks through the four scenarios most likely to come up, and finishes with curveball questions answered from first principles.</p>
+        <audio controls preload="none" src="episodes/ep07.mp3"></audio>
+        <p class="meta">8 min · <a href="transcripts/ep07.txt">Transcript</a></p></li>
+      <li><h2>8. Scenario-based questions, and the resume grill</h2>
+        <p>Scenario questions sound like this: &quot;It&#x27;s Monday morning, the executive dashboard is wrong, what do you do?&quot; They test judgement under pressure, more than knowledge. The structure that works every time is: stabilise, diagnose, fix, prevent, and communicate. Stabilise means stop the damage first. Diagnose means find the real cause, not the first symptom. Fix means the smallest safe change. Prevent means the change to the system so it doesn&#x27;t recur. And communicate means telling the right people early, with facts and a time for the next update.</p>
+        <audio controls preload="none" src="episodes/ep08.mp3"></audio>
+        <p class="meta">11 min · <a href="transcripts/ep08.txt">Transcript</a></p></li>
+      <li><h2>9. The managerial round: STAR stories, leadership and consulting</h2>
+        <p>The managerial round tests judgement more than technology: ownership, stakeholders, leading people, handling clients. At a consultancy, picture the interviewer asking one question: &quot;Can I put this person in front of a client on their own?&quot;</p>
+        <audio controls preload="none" src="episodes/ep09.mp3"></audio>
+        <p class="meta">10 min · <a href="transcripts/ep09.txt">Transcript</a></p></li>
+      <li><h2>10. The Senior Forward Deployed Engineer role</h2>
+        <p>The Senior Forward Deployed Engineer role at Databricks used to be called Resident Solution Architect. It&#x27;s a customer-embedded engineer: you sit with a strategic customer and build, deploy and debug production systems end to end, often Databricks Apps. It&#x27;s more hands-on than an architect role, and the bar is evidence: production outcomes, role clarity, and certification.</p>
+        <audio controls preload="none" src="episodes/ep10.mp3"></audio>
+        <p class="meta">8 min · <a href="transcripts/ep10.txt">Transcript</a></p></li>
+      <li><h2>11. The rapid-fire drill</h2>
+        <p>This is the practice episode. I&#x27;ll ask a question, then leave a pause. Answer out loud during the pause, in under a minute, using a headline first. Then you&#x27;ll hear a short model answer to compare. If you need more time, pause the player. Replay this episode the day before each interview.</p>
+        <audio controls preload="none" src="episodes/ep11.mp3"></audio>
+        <p class="meta">14 min · <a href="transcripts/ep11.txt">Transcript</a></p></li>
+</ol>
+</main></body></html>

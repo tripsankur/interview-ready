@@ -1,0 +1,54 @@
+Episode 5. Kafka and streaming, in depth
+
+
+Streaming is where interviewers find out whether you've run things in production. This episode gives you the vocabulary and the failure stories to show you've run Kafka pipelines for real. We cover Kafka fundamentals, reading Kafka with Structured Streaming, exactly-once, triggers and latency, watermarks and late data, joins, state, change data capture, operations and monitoring, and four streaming scenarios.
+
+Kafka fundamentals first, in plain terms. A topic is a named stream of records. Each topic is split into partitions, and a partition is an ordered, append-only log. Every record in a partition has an offset, its position in that log. Ordering is guaranteed only within a partition, not across the topic. A record's key decides its partition, so all events for one customer go to the same partition and stay in order. Consumers in the same consumer group share the partitions between them, so the maximum parallelism of a group is the number of partitions. Kafka keeps data for a retention period, by time or size, then deletes it. Compacted topics keep only the latest record per key, which suits reference data and change streams. Replication across brokers gives durability. On Azure, Event Hubs offers a Kafka-compatible endpoint, so the same Spark code works with different connection settings.
+
+Now reading Kafka in Structured Streaming. Headline: "Spark treats Kafka as a source, but it tracks offsets in its own checkpoint, not in Kafka's consumer groups." That's a detail many people get wrong, and it matters for monitoring. The key options. Subscribe to a topic, a list of topics, or a pattern. Starting offsets: earliest, latest, or specific offsets per partition, or a starting timestamp. Starting offsets only apply to the very first run; after that the checkpoint wins. Max offsets per trigger caps how much each micro-batch reads, which protects you during a backlog. Min partitions lets Spark split Kafka partitions into more tasks for parallelism. And fail on data loss: if offsets you need have already been deleted by retention, Spark fails by default, which is what you want in production, so you notice.
+
+The payload arrives as binary key and value columns, plus topic, partition, offset and timestamp. You parse the value with from JSON and an explicit schema, or with from Avro and a schema registry. Keep the topic, partition and offset as columns in bronze. That's your lineage, and it makes reprocessing and deduplication possible.
+
+Security: Kafka options pass through with a kafka dot prefix, for SASL and SSL settings, and credentials come from secrets, never from code.
+
+Exactly-once. Headline: "Spark gives exactly-once into Delta, end to end, because the checkpoint ties each micro-batch to a range of offsets, and the Delta commit for that batch is idempotent." If a batch fails and retries, it reprocesses the same offsets and Delta won't commit the same batch twice. For upserts, use foreachBatch with a MERGE on business keys. Inside foreachBatch, Spark doesn't automatically make your code idempotent, so either use MERGE, or the Delta writer options for transactional writes with an application ID and batch version, so a replayed batch is skipped. Writing back out to Kafka is different: Spark's Kafka sink is at-least-once, so downstream consumers must deduplicate, usually on a key.
+
+Triggers and latency. Headline: "Pick the trigger by the latency the business actually needs, because latency costs money." Available-now processes everything currently available, in sensible batches, and then stops. Run it on a schedule and you get incremental streaming semantics at batch cost. This is ideal for near-real-time in minutes. A processing-time trigger runs a micro-batch every so often, for example every thirty seconds, on an always-on cluster. Default with no trigger runs batches back to back. And for sub-second needs, Databricks has a lower-latency real-time mode for some workloads; check its current availability before claiming detail. A good line to use: "We chose micro-batch or near-real-time per feed, depending on how fresh each one needed to be."
+
+Event time, watermarks and late data. Processing time is when Spark sees the event. Event time is when it actually happened. For windowed aggregations, use event time. The watermark says how late an event can be and still count: the latest event time seen, minus the allowed lateness. Events later than that are dropped from stateful operations, and state older than it is cleaned up. The trade-off is completeness versus memory and latency: a long watermark catches more late data but holds more state and delays final results. If late data must never be lost, land everything raw in bronze first, then aggregate, so you can always reprocess.
+
+Joins. A stream-static join joins each micro-batch to a Delta table, like enriching events with customer reference data. The static side is re-read each batch, so it picks up changes. A stream-stream join needs both sides buffered in state, so you need watermarks on both streams and a time-range condition in the join, otherwise state grows forever. Outer stream-stream joins only emit unmatched rows after the watermark passes.
+
+Deduplication. Kafka producers can send duplicates on retry, and Spark's Kafka sink is at-least-once. Deduplicate with drop duplicates within watermark on a unique event ID, which keeps state bounded. Or deduplicate in the MERGE, using the event ID as the match key.
+
+State, briefly, since it's a favourite. State lives in a state store per partition, saved to the checkpoint each batch. Use the RocksDB state store for large state. Always set a watermark, or state grows forever. Output modes: append emits only final rows, update emits changed rows, complete rewrites the whole result. And the checkpoint fixes the state schema and the number of shuffle partitions, so changing grouping keys or stateful operators means a new checkpoint and a backfill.
+
+Checkpoints. One checkpoint per query, never shared between queries. Keep it in reliable storage, and treat it as part of the pipeline's state: deleting it means the query starts from scratch. Some changes are safe with an existing checkpoint, like changing a filter or adding a column. Others aren't, like changing the source topics in incompatible ways, the aggregation keys, or stateful operators.
+
+Change data capture through Kafka. Debezium reads the database log and publishes a change event per row, with the operation, insert, update or delete, plus before and after images and a source timestamp or log position. Land the raw events in bronze. Then apply them to silver with AUTO CDC in a declarative pipeline, or a MERGE in foreachBatch, using the log position as the sequencing column so out-of-order events resolve correctly, and handling deletes explicitly. Tombstone records on compacted topics signal deletes.
+
+Declarative pipelines with Kafka. A streaming table can read Kafka directly. It's a good fit for standard bronze ingestion with expectations. But protect that bronze table from a full refresh, because Kafka's retention may no longer hold the history, and a full refresh would lose it.
+
+Operations and monitoring. Headline: "Watch lag, batch duration and state." Because Spark keeps offsets in its checkpoint, Kafka's consumer-group lag tools won't see it by default. Use the streaming query progress: input rows per second versus processed rows per second, batch duration, and the offsets each source is behind. On Databricks you can push these metrics to monitoring with a streaming query listener. Alert when batch duration exceeds the trigger interval, or when lag keeps growing. Also watch small files from frequent micro-batches, and compact them with optimized writes, auto compaction, or predictive optimization.
+
+Many topics at once. You can run one query per topic, which isolates failures, or one query subscribing to many topics, which saves compute but couples them. A common pattern is one bronze query per topic or topic group, then fan out downstream.
+
+Now four streaming scenarios. Answer each out loud before the model answer.
+
+Scenario one: "Consumer lag keeps growing every hour." Pause and think.
+(Pause: answer out loud.)
+Model answer. Throughput is lower than the input rate. First check batch duration against the trigger interval, and whether one Kafka partition is hot, which is a key-skew problem. Then the fixes: add Spark parallelism with min partitions, add Kafka partitions if the topic allows, right-size the cluster, remove expensive per-row work like Python UDFs, compact small files in the target, and check whether a stream-stream join or growing state is slowing every batch.
+
+Scenario two: "The streaming job was down for a week, and now it fails on restart with a data loss error." Pause and think.
+(Pause: answer out loud.)
+Model answer. The offsets in the checkpoint have aged out of Kafka's retention. Don't just switch fail-on-data-loss off and move on, because you'd silently lose records. Recover the gap from another source if possible: the source database, a replay from the producer, or an archive topic. Then restart from the earliest available offsets or a new checkpoint, and reconcile counts. And prevent it: alert on job failure quickly, and land everything raw in bronze so Kafka isn't your only copy.
+
+Scenario three: "Downstream reports show duplicate events." Pause and think.
+(Pause: answer out loud.)
+Model answer. Likely at-least-once delivery somewhere: producer retries, Spark's Kafka sink, or a non-idempotent foreachBatch that appends. Make the write idempotent with a MERGE on a unique event ID, or drop duplicates within watermark, and if writing with foreachBatch, use transactional writes keyed on the batch ID.
+
+Scenario four: "The business wants a dashboard updated in real time. Design it." Pause and think.
+(Pause: answer out loud.)
+Model answer. First ask what decision changes with fresher data, and what freshness is good enough, because minutes is usually enough and far cheaper. Then: Kafka into a bronze streaming table, a silver table with event-time watermarks and dedup, and a gold materialized view or aggregate table refreshed incrementally, served by a serverless SQL warehouse. Use an available-now trigger every few minutes unless seconds really matter. Monitor lag and batch duration, and alert.
+
+That's Kafka and streaming. Next episode: governance, security and networking.

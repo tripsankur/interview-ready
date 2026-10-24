@@ -1,0 +1,46 @@
+Episode 1. The game plan: how to answer, how to navigate, and how to use STAR
+
+
+Welcome to Interview Ready, a revision series for senior Databricks interviews: data architect roles at Databricks consulting partners, and Databricks' own Senior Forward Deployed Engineer role. Eleven episodes. This first one is about how to answer, not what to answer. The next nine cover the content, and the last one is a rapid-fire drill where you answer out loud.
+
+Here's the plan for the series. Episode two is your story: the pitch and how to elaborate on your experience. Episode three is Spark and Delta Lake internals. Episode four is pipelines, compute, platform basics and CI/CD. Episode five is Kafka and streaming, in depth. Episode six is governance, security and networking. Episode seven is design questions and first-principles thinking. Episode eight is scenario-based questions, plus the resume grill. Episode nine is the managerial round and your STAR story bank. Episode ten is the Senior Forward Deployed Engineer role. And episode eleven is the drill.
+
+A quick word on who you'll be talking to. Databricks consulting partners sell migrations, especially onto Unity Catalog, and GenAI on Databricks, like Genie spaces and agents. So expect questions on Genie, Unity Catalog migration, cost and onshore-offshore delivery, and research the partner's own published case studies before the interview. Databricks' Forward Deployed Engineers, by contrast, are customer-embedded builders, so expect more hands-on depth, Databricks Apps, debugging and current product breadth. Same preparation, different emphasis.
+
+Let's start with what these panels are actually scoring. For a partner architect role, and for the Forward Deployed Engineer role, they're asking three questions about you. Can this person go deep on Databricks? Can they make good trade-offs, and explain them? And can I put them in front of a customer on their own? Every answer you give should help with at least one of those.
+
+So here's the shape of a strong technical answer. I call it headline, three points, proof, trade-off.
+
+Headline first. Answer the question in one sentence before you explain anything. If they ask, "When would you use liquid clustering?", don't start with history. Start with: "For almost every new table, unless it's very large and always filtered by a low-cardinality column like date." Now they know your answer, and everything after it is support.
+
+Then three points. Not seven. Three is easy to follow and easy to remember. If you have more, say, "There are a few others, happy to go into them."
+
+Then proof. Tie it to something you did. For example: "On our archival platform, we used liquid clustering on the biggest tables, and date partitions only where retention deletes by date." One concrete example from your own work beats five generic facts.
+
+Then the trade-off. Architects are judged on trade-offs. "The cost is that you need to run OPTIMIZE, or let predictive optimization do it." Saying what you gave up shows you chose, rather than followed a recipe.
+
+Now, behavioural questions. Use STAR: situation, task, action, result. But the trick is the timing. In a ninety-second answer, spend about fifteen seconds on the situation, ten on the task, about sixty on the action, and fifteen on the result. Most people spend a minute on the situation and rush the action. The action is the part they score.
+
+Three rules for STAR. First, say "I", not "we". They're hiring you, not your team. You can say "my team built it, and my part was the design and the security approach." That's honest and it gives role clarity, which the Databricks profile explicitly asks for. Second, put a number in every result: records migrated, users onboarded, weeks to production, percentage faster, dollars saved. Third, end with one line on what you learned or would do differently. That shows judgement.
+
+Now let's talk about navigating questions, because this is where good candidates separate themselves.
+
+When a question is vague, clarify before answering. One question, not five. "Is this for batch or streaming?" or "Roughly how much data, and how fresh does it need to be?" In a design round, asking first is expected. It's what an architect does with a real customer.
+
+When you don't know something, don't bluff. Panels at Databricks will know the product better than you on some points, and bluffing is the fastest way to lose trust. Say: "I haven't used that in production. Here's how I'd reason about it." Then reason from first principles. That turns a gap into a demonstration of thinking. For example: "I haven't run Lakebase in production, but as a managed Postgres it fits app state and fast lookups, not analytics. I'd check its scaling and how it syncs with Delta."
+
+When you're asked about something you're weaker on, like MLOps or multi-cloud, use the bridge. Acknowledge, bridge, show. "My depth is the data platform rather than model training. What I have done is build the foundations MLOps relies on: governed data, CI/CD and quality checks. And here's how I'd set up the lifecycle on Databricks." Honest, then useful.
+
+When an answer is going long, check in. "I can go deeper on the networking side, or move on. What's most useful?" This shows you read the room. It's a consulting skill.
+
+When they push back, don't fold and don't fight. Say: "That's a fair point. My reasoning was this. If that constraint is true, I'd change it to this." Interviewers sometimes push back just to see if you can hold a position or update it gracefully.
+
+For whiteboard and design questions, use the opening move every time. Four things before you draw. Who uses this and what decision does it drive. Volumes, latency and growth. Constraints: regulation, existing tools, skills, budget. And what success looks like in three months and twelve months. Then draw left to right: sources, ingestion, storage layers, governance, consumers. Then talk about the risks.
+
+For curveball questions, use five steps. Restate the goal and ask one clarifying question. Find the binding constraint: is it data size, memory, network, latency, or cost? Reason about what physically happens: bytes read, moved and written. Propose the simplest design that respects the constraint. Then name the trade-off and what would change your mind. Say every step out loud. They're scoring how you think, not whether you land on their exact answer.
+
+A few delivery notes. Slow down on numbers. Pause after your headline. Don't apologise for gaps; just state them and move on. And have four or five of your own projects ready, each with its scale and outcome, because they're your strongest evidence.
+
+Last thing for this episode: the levelling point. For the Forward Deployed Engineer role, Databricks says the vetting calibrates you to a level based on demonstrated capability, not tenure. That means depth and evidence in every answer matters more than years on the CV. So keep using the same structure: headline, three points, proof, trade-off. And for stories: situation, task, action, result, with the action taking most of the time.
+
+That's the game plan. In the next episode, we'll rehearse your story: the ninety-second pitch, and how to elaborate on your lakehouse and hands-on work.

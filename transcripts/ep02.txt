@@ -1,0 +1,46 @@
+Episode 2. Your story: the pitch and your experience
+
+
+In this episode we build the opening of every interview: "Tell me about yourself." Then we cover how to elaborate when they ask about your lakehouse design work, your hands-on development, and your career. The examples here use a fictional data platform lead, so swap in your own projects and numbers.
+
+A strong pitch has four parts, and takes about ninety seconds. Who you are. The platforms you run. Three initiatives. And why this role.
+
+Part one, who you are, in two sentences: your current role and team, then your career arc. For example: "I lead design and delivery for a data and AI platform team at a large insurance company, with a team of engineers and testers. I've spent fifteen years in IT: first in software engineering, and for the last eight years in data platforms, across banking and insurance."
+
+Part two, the platforms. Name them by what they do, with their scale. For example: "We run two platforms. The analytics platform connects to over a hundred source systems and has several hundred active users. The archival platform keeps the data from systems that have reached end of life, hundreds of billions of records."
+
+Part three, three initiatives, each with one number. Not your whole job description. Pick the three that best match the role. For example: "I've driven several initiatives, but three stand out. First, tokenisation built into our data loading framework, so customer details are protected before they land. Second, a retention product that deletes data once the law says we no longer need it. Third, a Databricks App that lets business teams get data for regulatory requests without asking an engineer."
+
+Part four, why this role, in one line: "So I bring hands-on experience building and running Databricks at scale, and explaining it to both engineers and business teams. That's what I want to do for clients." For a Forward Deployed Engineer role, end with: "That's what I want to do embedded with Databricks customers."
+
+Notice what the pitch avoids. No list of technologies. No adjectives like passionate or results-driven. Just roles, platforms, numbers and a reason.
+
+Delivery tips. Slow down on the numbers. Pause briefly before "First", "Second" and "Third". And stop after the last line. Let them choose the follow-up. Don't fill the silence. Rehearse it out loud with a timer three times before each interview.
+
+Now, the likely follow-ups, and how to handle each.
+
+"What's your exact title?" Say it plainly, even if it undersells you, then explain what you do: "Officially Technical Product Manager. In practice I'm the architect and technical lead for the team, and I also own the backlog." Never inflate a title; reference checks will show the real one.
+
+"Walk me through your career." Go backwards, and keep it to two minutes. Today's role, then each previous role in one or two sentences, with one result each. Finish with the thread that ties it together, for example: "Every move took me closer to large, regulated data platforms."
+
+"Tell me about your experience in a particular industry." Give one project from that industry with your role and its outcome.
+
+Next: "Elaborate on your lakehouse design work."
+
+Headline first: "The one I designed end to end is an archival lakehouse." Then the detail. It runs on Azure Databricks with Delta Lake on ADLS Gen 2, holding data from end-of-life systems on AWS, GCP and SQL Server. It's a medallion design. Bronze is an exact copy of the source, for legal defensibility. Silver is typed, deduplicated and tokenised. Gold is a thin layer of curated views for retrieval. Unstructured files sit in Unity Catalog volumes. Governance and retention are built in, not added later: grants mapped to identity-provider groups, row filters and column masks, attribute-based access control with governed tags, and a retention rule on every object enforced by a purge pipeline. On top, business users get a Databricks App and SQL warehouses.
+
+Have four design decisions ready if they push. One, a thin gold layer on purpose, because archival data is read-mostly. Two, tokenise at silver, so raw identifiers never reach analysts or apps. Three, clustering over partitioning: liquid clustering on large tables, with date partitions only where retention deletes by date. Four, on-behalf-of authentication in the app, so security stays in Unity Catalog rather than in app code.
+
+Next: "Elaborate on your hands-on Spark and Databricks work."
+
+Headline: "I'm hands-on in Python, PySpark and SQL." Then evidence, as specific as you can be. A metadata-driven framework you designed and built, and how many records it has loaded. An ingestion framework you extended for near-real-time, micro-batch and batch loads from Kafka, files and databases. Security code you wrote, like tokenisation integrated with a secrets vault. Production Databricks Apps, and the CI/CD pipeline other teams use to deploy theirs. And any tuning wins, with the percentage.
+
+Be ready to sketch a streaming upsert. Read from Kafka with Structured Streaming. Parse and tokenise. Write with foreachBatch, and inside it, run a Delta MERGE on the business keys. Use a checkpoint location per stream, and an available-now trigger for micro-batch loads. Be ready to explain why foreachBatch: because MERGE isn't a native streaming sink. What the checkpoint guarantees: that each batch is tied to its Kafka offsets, so a retry never double-writes. And why available-now: it processes what's there and stops, which keeps cost down.
+
+Next: Spark tuning, Delta and Workflows. On tuning, give a real number and the levers: clustering on the biggest tables, OPTIMIZE to compact small files, partitioning only where it helped, and parallel loads. On Delta, mention MERGE for upserts, replaceWhere for reloads, schema evolution in bronze, time travel to debug, and, if you've done privacy work, deep knowledge of physical deletes. On Workflows, be precise about what's in production and what's in progress. If Airflow is your orchestrator today, say so, and explain what moving to Databricks Workflows would give you. Never overstate production experience; panels test it.
+
+Finally, the two areas to handle carefully if they're not your core: MLOps and multi-cloud. For MLOps, lead with honesty: "My depth is the data platform rather than model development." Then any relevant background, like study or GenAI work with LLM APIs and agents. Then show you know the Databricks lifecycle: feature tables in Unity Catalog, MLflow tracking, the Unity Catalog model registry with champion and challenger aliases, Model Serving, inference tables and monitoring. And the principle: deploy code, not models.
+
+For multi-cloud: "My primary platform is Azure Databricks, but my work crosses clouds," and give the real examples, like migrating data out of AWS or GCP. Then: "The Databricks patterns are the same on every cloud. What changes is storage, identity and networking." On AWS, that's S3, IAM roles, a customer-managed VPC and PrivateLink. On GCP, it's Cloud Storage, service accounts, a customer-managed VPC and Private Service Connect.
+
+That's your story. In the next episode, we go deep on Spark and Delta internals.
