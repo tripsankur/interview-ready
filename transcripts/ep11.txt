@@ -13,7 +13,7 @@ Model answer: archival data is read-mostly, so the layers are purposeful, not ce
 
 Question three. How do you make purged data actually unrecoverable in Delta?
 (Pause: answer out loud.)
-Model answer: DELETE only marks rows with deletion vectors. Rewrite the files with REORG with APPLY PURGE or OPTIMIZE, then VACUUM after the retention window, shorten deleted-file retention on purge tables, and handle copies: backups, clones, bronze raw files and extracts. Prove it with run logs, counts, table history and a verification query.
+Model answer: with deletion vectors on, a DELETE only marks rows. Rewrite the files with REORG with APPLY PURGE or OPTIMIZE, then VACUUM after the retention window, shorten deleted-file retention on purge tables, and handle copies: change data feed files, backups, clones, bronze raw files and extracts. Prove it with run logs, counts, table history and a verification query.
 
 Question four. When do you choose partitioning, Z-order or liquid clustering?
 (Pause: answer out loud.)
@@ -69,9 +69,9 @@ Model answer: check firewall rules for Databricks service tags, user-defined rou
 
 Question seventeen. How would you design for multiple regions?
 (Pause: answer out loud.)
-Model answer: metastores are regional and identity is account-wide. Deploy catalogs, grants and policies as code to every region, keep regulated data in its home region, share with Delta Sharing, replicate for disaster recovery with deep clone, and test failover.
+Model answer: metastores are regional and identity is account-wide. Deploy catalogs, grants and policies as code to every region, keep regulated data in its home region, share with OpenSharing, replicate for disaster recovery with deep clone, and test failover.
 
-Question eighteen. A client's Genie space is giving wrong answers over fifteen hundred tables. Fix it.
+Question eighteen. A client's Genie Agent is giving wrong answers over fifteen hundred tables. Fix it.
 (Pause: answer out loud.)
 Model answer: accuracy comes from curation. Curated gold tables or metric views, several focused spaces, rich descriptions, instructions and trusted SQL, a benchmark of real questions, and Unity Catalog permissions per user.
 

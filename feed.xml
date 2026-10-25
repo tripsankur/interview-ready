@@ -21,7 +21,7 @@
       <itunes:episode>1</itunes:episode>
       <itunes:episodeType>full</itunes:episodeType>
       <description>Welcome to Interview Ready, a revision series for senior Databricks interviews: data architect roles at Databricks consulting partners, and Databricks&#x27; own Senior Forward Deployed Engineer role. Eleven episodes. This first one is about how to answer, not what to answer. The next nine cover the content, and the last one is a rapid-fire drill where you answer out loud.</description>
-      <enclosure url="https://tripsankur.github.io/interview-ready/episodes/ep01.mp3" length="3668973" type="audio/mpeg"/>
+      <enclosure url="https://tripsankur.github.io/interview-ready/episodes/ep01.mp3" length="3670125" type="audio/mpeg"/>
       <guid isPermaLink="false">interview-ready-ep01-v1</guid>
       <pubDate>Sat, 24 Oct 2026 08:01:00 +0000</pubDate>
       <itunes:duration>00:07:39</itunes:duration>
@@ -57,10 +57,10 @@
       <itunes:episode>4</itunes:episode>
       <itunes:episodeType>full</itunes:episodeType>
       <description>This episode covers ingestion strategy, metadata-driven frameworks, Spark Declarative Pipelines, the trouble with medallion dogma, compute selection, a set of platform basics that often come up as quick questions, and CI/CD. Kafka and streaming get their own episode next.</description>
-      <enclosure url="https://tripsankur.github.io/interview-ready/episodes/ep04.mp3" length="4993005" type="audio/mpeg"/>
+      <enclosure url="https://tripsankur.github.io/interview-ready/episodes/ep04.mp3" length="5179629" type="audio/mpeg"/>
       <guid isPermaLink="false">interview-ready-ep04-v1</guid>
       <pubDate>Sat, 24 Oct 2026 08:04:00 +0000</pubDate>
-      <itunes:duration>00:10:24</itunes:duration>
+      <itunes:duration>00:10:47</itunes:duration>
       <itunes:explicit>false</itunes:explicit>
     </item>
     <item>
@@ -69,10 +69,10 @@
       <itunes:episode>5</itunes:episode>
       <itunes:episodeType>full</itunes:episodeType>
       <description>Streaming is where interviewers find out whether you&#x27;ve run things in production. This episode gives you the vocabulary and the failure stories to show you&#x27;ve run Kafka pipelines for real. We cover Kafka fundamentals, reading Kafka with Structured Streaming, exactly-once, triggers and latency, watermarks and late data, joins, state, change data capture, operations and monitoring, and four streaming scenarios.</description>
-      <enclosure url="https://tripsankur.github.io/interview-ready/episodes/ep05.mp3" length="5621037" type="audio/mpeg"/>
+      <enclosure url="https://tripsankur.github.io/interview-ready/episodes/ep05.mp3" length="5746413" type="audio/mpeg"/>
       <guid isPermaLink="false">interview-ready-ep05-v1</guid>
       <pubDate>Sat, 24 Oct 2026 08:05:00 +0000</pubDate>
-      <itunes:duration>00:11:43</itunes:duration>
+      <itunes:duration>00:11:58</itunes:duration>
       <itunes:explicit>false</itunes:explicit>
     </item>
     <item>
@@ -81,10 +81,10 @@
       <itunes:episode>6</itunes:episode>
       <itunes:episodeType>full</itunes:episodeType>
       <description>This is home ground for you. Your privacy and governance work is your strongest differentiator, so this episode is about saying it crisply. We cover Unity Catalog, row filters and attribute-based access, Databricks Apps authentication, tokenisation, enterprise governance strategy, multi-region design, and Azure networking: VNet injection and Private Link.</description>
-      <enclosure url="https://tripsankur.github.io/interview-ready/episodes/ep06.mp3" length="4361133" type="audio/mpeg"/>
+      <enclosure url="https://tripsankur.github.io/interview-ready/episodes/ep06.mp3" length="4375533" type="audio/mpeg"/>
       <guid isPermaLink="false">interview-ready-ep06-v1</guid>
       <pubDate>Sat, 24 Oct 2026 08:06:00 +0000</pubDate>
-      <itunes:duration>00:09:05</itunes:duration>
+      <itunes:duration>00:09:07</itunes:duration>
       <itunes:explicit>false</itunes:explicit>
     </item>
     <item>
@@ -93,10 +93,10 @@
       <itunes:episode>7</itunes:episode>
       <itunes:episodeType>full</itunes:episodeType>
       <description>Design rounds feel open-ended, but they&#x27;re scored on structure. This episode gives you a repeatable way to run any design question, then walks through the four scenarios most likely to come up, and finishes with curveball questions answered from first principles.</description>
-      <enclosure url="https://tripsankur.github.io/interview-ready/episodes/ep07.mp3" length="3967725" type="audio/mpeg"/>
+      <enclosure url="https://tripsankur.github.io/interview-ready/episodes/ep07.mp3" length="4067565" type="audio/mpeg"/>
       <guid isPermaLink="false">interview-ready-ep07-v1</guid>
       <pubDate>Sat, 24 Oct 2026 08:07:00 +0000</pubDate>
-      <itunes:duration>00:08:16</itunes:duration>
+      <itunes:duration>00:08:28</itunes:duration>
       <itunes:explicit>false</itunes:explicit>
     </item>
     <item>
@@ -105,10 +105,10 @@
       <itunes:episode>8</itunes:episode>
       <itunes:episodeType>full</itunes:episodeType>
       <description>Scenario questions sound like this: &quot;It&#x27;s Monday morning, the executive dashboard is wrong, what do you do?&quot; They test judgement under pressure, more than knowledge. The structure that works every time is: stabilise, diagnose, fix, prevent, and communicate. Stabilise means stop the damage first. Diagnose means find the real cause, not the first symptom. Fix means the smallest safe change. Prevent means the change to the system so it doesn&#x27;t recur. And communicate means telling the right people early, with facts and a time for the next update.</description>
-      <enclosure url="https://tripsankur.github.io/interview-ready/episodes/ep08.mp3" length="5488365" type="audio/mpeg"/>
+      <enclosure url="https://tripsankur.github.io/interview-ready/episodes/ep08.mp3" length="5681133" type="audio/mpeg"/>
       <guid isPermaLink="false">interview-ready-ep08-v1</guid>
       <pubDate>Sat, 24 Oct 2026 08:08:00 +0000</pubDate>
-      <itunes:duration>00:11:26</itunes:duration>
+      <itunes:duration>00:11:50</itunes:duration>
       <itunes:explicit>false</itunes:explicit>
     </item>
     <item>
@@ -117,10 +117,10 @@
       <itunes:episode>9</itunes:episode>
       <itunes:episodeType>full</itunes:episodeType>
       <description>The managerial round tests judgement more than technology: ownership, stakeholders, leading people, handling clients. At a consultancy, picture the interviewer asking one question: &quot;Can I put this person in front of a client on their own?&quot;</description>
-      <enclosure url="https://tripsankur.github.io/interview-ready/episodes/ep09.mp3" length="4799277" type="audio/mpeg"/>
+      <enclosure url="https://tripsankur.github.io/interview-ready/episodes/ep09.mp3" length="5787885" type="audio/mpeg"/>
       <guid isPermaLink="false">interview-ready-ep09-v1</guid>
       <pubDate>Sat, 24 Oct 2026 08:09:00 +0000</pubDate>
-      <itunes:duration>00:10:00</itunes:duration>
+      <itunes:duration>00:12:03</itunes:duration>
       <itunes:explicit>false</itunes:explicit>
     </item>
     <item>
@@ -129,10 +129,10 @@
       <itunes:episode>10</itunes:episode>
       <itunes:episodeType>full</itunes:episodeType>
       <description>The Senior Forward Deployed Engineer role at Databricks used to be called Resident Solution Architect. It&#x27;s a customer-embedded engineer: you sit with a strategic customer and build, deploy and debug production systems end to end, often Databricks Apps. It&#x27;s more hands-on than an architect role, and the bar is evidence: production outcomes, role clarity, and certification.</description>
-      <enclosure url="https://tripsankur.github.io/interview-ready/episodes/ep10.mp3" length="3675501" type="audio/mpeg"/>
+      <enclosure url="https://tripsankur.github.io/interview-ready/episodes/ep10.mp3" length="4268781" type="audio/mpeg"/>
       <guid isPermaLink="false">interview-ready-ep10-v1</guid>
       <pubDate>Sat, 24 Oct 2026 08:10:00 +0000</pubDate>
-      <itunes:duration>00:07:39</itunes:duration>
+      <itunes:duration>00:08:54</itunes:duration>
       <itunes:explicit>false</itunes:explicit>
     </item>
     <item>
@@ -141,10 +141,10 @@
       <itunes:episode>11</itunes:episode>
       <itunes:episodeType>full</itunes:episodeType>
       <description>This is the practice episode. I&#x27;ll ask a question, then leave a pause. Answer out loud during the pause, in under a minute, using a headline first. Then you&#x27;ll hear a short model answer to compare. If you need more time, pause the player. Replay this episode the day before each interview.</description>
-      <enclosure url="https://tripsankur.github.io/interview-ready/episodes/ep11.mp3" length="6720621" type="audio/mpeg"/>
+      <enclosure url="https://tripsankur.github.io/interview-ready/episodes/ep11.mp3" length="6733485" type="audio/mpeg"/>
       <guid isPermaLink="false">interview-ready-ep11-v1</guid>
       <pubDate>Sat, 24 Oct 2026 08:11:00 +0000</pubDate>
-      <itunes:duration>00:14:00</itunes:duration>
+      <itunes:duration>00:14:02</itunes:duration>
       <itunes:explicit>false</itunes:explicit>
     </item>
   </channel>
